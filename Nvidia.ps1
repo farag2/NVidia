@@ -1,5 +1,4 @@
-# Nvidia
-# Turn off services
+﻿# Turn off services
 # Отключить службы
 Get-Service -ServiceName NvTelemetryContainer | Stop-Service
 Get-Service -ServiceName NvTelemetryContainer | Set-Service -StartupType Manual
@@ -10,8 +9,8 @@ Unregister-ScheduledTask -TaskName NvTmMon* -Confirm:$false
 Unregister-ScheduledTask -TaskName NvTmRep* -Confirm:$false
 # Delete telemetry recovery batch files
 # Удалить bat-файлы восстановления телеметрии
-Remove-Item -Path $env:SystemRoot\NvContainerRecovery.bat -Force
-Remove-Item -Path $env:SystemRoot\NvTelemetryContainerRecovery.bat -Force
+Remove-Item -Path $env:SystemRoot\NvContainerRecovery.bat -Force -ErrorAction SilentlyContinue
+Remove-Item -Path $env:SystemRoot\NvTelemetryContainerRecovery.bat -Force -ErrorAction SilentlyContinue
 # Turn off Nvidia control panel
 # Отключить Панель управления
 Get-Service -ServiceName NVDisplay.ContainerLocalSystem | Stop-Service
