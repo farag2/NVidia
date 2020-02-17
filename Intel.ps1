@@ -1,5 +1,4 @@
-# Intel
-# Stop processes
+﻿# Stop processes
 # Остановить процессы
 Stop-Process -Name igfx* -Force -ErrorAction SilentlyContinue
 # Turn off services
@@ -15,9 +14,12 @@ $services = @(
 )
 Get-Service -Name $services | Stop-Service
 Get-Service -Name $services | Set-Service -StartupType Manual
+# Task in the Task Scheduler
+# Служба в Планировщике задач
+Get-ScheduledTask -TaskName "Intel PTT EK Recertification" | Disable-ScheduledTask
 # Remove $env:SystemDrive\Intel folder
 # Удалить папку $env:SystemDrive\Intel
-Remove-Item -Path $env:SystemDrive\Intel -Recurse -Force
+Remove-Item -Path $env:SystemDrive\Intel -Recurse -Force -ErrorAction SilentlyContinue
 
 # Errors output
 # Вывод ошибок
