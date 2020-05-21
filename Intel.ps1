@@ -1,6 +1,7 @@
 ﻿# Stop processes
 # Остановить процессы
-Stop-Process -Name igfx* -Force -ErrorAction SilentlyContinue
+Stop-Process -Name igfx* -Force -ErrorAction Ignore
+
 # Turn off services
 # Отключить службы
 $services = @(
@@ -14,19 +15,23 @@ $services = @(
 )
 Get-Service -Name $services | Stop-Service
 Get-Service -Name $services | Set-Service -StartupType Manual
+
 # Task in the Task Scheduler
 # Служба в Планировщике задач
 Get-ScheduledTask -TaskName "Intel PTT EK Recertification" | Disable-ScheduledTask
+
 # Remove $env:SystemDrive\Intel folder
 # Удалить папку $env:SystemDrive\Intel
 Remove-Item -Path $env:SystemDrive\Intel -Recurse -Force -ErrorAction SilentlyContinue
 
 # Errors output
 # Вывод ошибок
-Write-Host "`nErrors" -BackgroundColor Red
-($Error | ForEach-Object -Process {
-	[PSCustomObject] @{
-		Line = $_.InvocationInfo.ScriptLineNumber
-		Error = $_.Exception.Message
-	}
-} | Sort-Object -Property Line | Format-Table -AutoSize -Wrap | Out-String).Trim()
+if ($Error)
+{
+	($Error | ForEach-Object -Process {
+		[PSCustomObject] @{
+			Line = $_.InvocationInfo.ScriptLineNumber
+			"Errors/Warnings" = $_.Exception.Message
+		}
+	} | Sort-Object -Property Line | Format-Table -AutoSize -Wrap | Out-String).Trim()
+}
